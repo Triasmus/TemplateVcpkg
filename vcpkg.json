@@ -1,0 +1,20 @@
+{
+  "name": "ipc-testing",
+  "version": "0.0.1",
+  "builtin-baseline": "f6a5d4e8eb7476b8d7fc12a56dff300c1c986131",
+  "dependencies": [
+    "boost-json",
+    "boost-test",
+    "cpr",
+    "magic-enum",
+    "openssl",
+    "spdlog",
+    "stduuid"
+  ],
+  "overrides": [
+    {
+      "name": "curl",
+      "version": "7.80.0"
+    }
+  ]
+}
