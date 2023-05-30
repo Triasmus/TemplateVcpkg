@@ -1,0 +1,20 @@
+{
+  "name": "template-vcpkg",
+  "version": "0.0.1",
+  "builtin-baseline": "b4ca42fc6d2388aa68fdb9f68ae50f91dbd93250",
+  "dependencies": [
+    "boost-json",
+    "boost-test",
+    "cpr",
+    "magic-enum",
+    "openssl",
+    "spdlog",
+    "stduuid"
+  ],
+  "overrides": [
+    {
+      "name": "curl",
+      "version": "7.80.0"
+    }
+  ]
+}
