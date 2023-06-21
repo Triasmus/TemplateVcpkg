@@ -2,8 +2,8 @@
 Template for a c++ project using vcpkg
 
 ## Dependecies
-`cmake >= v3.24`
-`gcc-11`
+`cmake >= v3.26`
+`gcc-13`
 
 This repo uses [vcpkg](https://github.com/microsoft/vcpkg) as a submodule.
 See [vcpkg.json](/vcpkg.json) for list of 3rd party libraries it uses.
@@ -14,27 +14,29 @@ For wsl, make sure to auto enable the ssh-agent: https://esc.sh/blog/ssh-agent-w
 ### Windows
 `Visual Studio 2022`
 
-## WSL 20.04 Compilation
-1. `sudo apt-get install pkg-config build-essential tar curl zip unzip`
-1. Install gcc-11
-    1. `sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test`
-    1. `sudo apt install -y gcc-11 g++-11`
-    1. `sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100`
-    1. `sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 100`
-1. Install cmake
-    1. `cd /tmp`
-    1. `sudo apt-get install libssl-dev libncurses5-dev`
-    1. `wget https://github.com/Kitware/CMake/releases/download/v3.25.1/cmake-3.25.1.tar.gz`
-    1. `tar -zxvf cmake-3.25.1.tar.gz`
-    1. `cd cmake-3.25.1/`
-    1. `sudo ./bootstrap` && `sudo make -j4` && `sudo make install`
-1. `cd ~/dev`
-1. `git clone git@github.com:Triasmus/CryptoTrading.git`
-1. `cd CryptoTrading/`
-1. `git submodule update --remote`
-1. `mkdir ../_cryptotrading && cd ../_cryptotrading`
-1. `cmake ../CryptoTrading` # Note: The first run of cmake might take awhile, since it has to download 3rd party libraries
-1. `make -j4 install`
+## WSL 22.04 Compilation
+```
+sudo apt-get install pkg-config build-essential tar curl zip unzip
+# Install gcc-13
+    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    sudo apt install -y gcc-13 g++-13
+    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 100
+    sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-13 100
+# Install cmake
+    cd /tmp
+    sudo apt-get install libssl-dev libncurses5-dev
+    wget https://github.com/Kitware/CMake/releases/download/v3.26.4/cmake-3.26.4.tar.gz
+    tar -zxvf cmake-3.26.4.tar.gz
+    cd cmake-3.26.4/
+    sudo ./bootstrap && sudo make -j4 && sudo make install
+cd ~/dev
+git clone git@github.com:Triasmus/TemplateVcpkg.git
+cd TemplateVcpkg/
+git submodule update --init
+mkdir ../_temVcpkg && cd ../_temVcpkg
+cmake ../TemplateVcpkg # Note: The first run of cmake might take awhile, since it has to download 3rd party libraries
+make -j4 install
+```
 
 ## Windows Compilation
 1. Run cmake.

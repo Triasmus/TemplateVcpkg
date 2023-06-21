@@ -1,7 +1,7 @@
 {
   "name": "template-vcpkg",
   "version": "0.0.1",
-  "builtin-baseline": "b4ca42fc6d2388aa68fdb9f68ae50f91dbd93250",
+  "builtin-baseline": "f6a5d4e8eb7476b8d7fc12a56dff300c1c986131",
   "dependencies": [
     "boost-json",
     "boost-test",
