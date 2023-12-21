@@ -2,6 +2,7 @@ set(lib_name SdCapnProto)
 #######################################
 set(Test_srcs
   echo.capnp
+  stream.capnp
   )
 source_group(Test FILES ${Test_srcs})
 list(APPEND ${lib_name}_capnp_srcs ${Test_srcs})
