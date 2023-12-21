@@ -1,7 +1,12 @@
-project(Shared)
+project(Shared VERSION ${CMAKE_PROJECT_VERSION})
 set(folder ${PROJECT_NAME})
 set_property(GLOBAL PROPERTY FOLDER ${PROJECT_NAME})
 ####################################################
-# No Dependency
-add_subdirectory(UtilitiesLIB/Utilities)
+set(InternalDirs # NOTE: ordered by dependency, then alphabetical
+  SdCapnProtoLIB/SdCapnProto
+  UtilitiesLIB/Utilities
+  )
+foreach(lib ${InternalDirs})
+  add_subdirectory(${lib})
+endforeach()
 xpSourceListAppend()

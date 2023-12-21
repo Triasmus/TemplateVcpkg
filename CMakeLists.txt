@@ -18,6 +18,7 @@ find_package(magic_enum CONFIG REQUIRED) # Has magic_enum::magic_enum
 find_package(OpenSSL REQUIRED) # Has OpenSSL::SSL OpenSSL::Crypto
 find_package(spdlog CONFIG REQUIRED) # Has spdlog::spdlog spdlog::spdlog_header_only
 find_package(stduuid CONFIG REQUIRED) # Has stduuid
+find_package(CapnProto CONFIG REQUIRED) # Has CapnProto::kj CapnProto::capnp CapnProto::capnpc CapnProto::kj-gzip (plus more)
 
 find_package(Boost REQUIRED COMPONENTS json unit_test_framework)
 if (Boost_FOUND)

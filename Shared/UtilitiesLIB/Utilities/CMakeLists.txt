@@ -16,7 +16,7 @@ target_link_libraries(${lib_name}
   PUBLIC Boost::json spdlog::spdlog
   PRIVATE cpr::cpr OpenSSL::SSL
   )
-target_include_directories(${lib_name} PUBLIC ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/UtilitiesLIB)
+target_include_directories(${lib_name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../)
 set_property(TARGET ${lib_name} PROPERTY FOLDER ${folder})
 add_subdirectory(Test)
 xpSourceListAppend(${${lib_name}_srcs})
