@@ -4,9 +4,11 @@
 #include <capnp/message.h>
 #include <kj/debug.h>
 
+#include "SdCapnProto/echo.capnp.h"
 #include "SdCapnProto/stream.capnp.h"
 #include "Utilities/SpdlogInit.hpp"
 
+#ifdef false
 class MyInterfaceImpl : public MyInterface::Server
 {
 public:
@@ -28,10 +30,24 @@ public:
     {
       promise = promise.then(sendChunk);
     }
-    return promise.then([&callback]() { return callback.doneRequest().send(); })
-      .then([]() { return kj::READY_NOW; });
+    auto test = promise.then([&callback]() { return callback.doneRequest().send(); });
+    return test.wait(callback.)
     // spdlog::info("Echoing: {}", std::string(params.getMessage()));
     // return promise.then(req.send).then(kj::READY_NOW);
+  }
+};
+#endif
+
+class EchoerImpl : public Echoer::Server
+{
+public:
+  kj::Promise<void> echo(EchoContext context) override
+  {
+    auto params = context.getParams();
+    std::string req = params.getMessage();
+    spdlog::info("Echoing: {}", req);
+    context.getResults().setRes(req);
+    return kj::READY_NOW;
   }
 };
 
@@ -42,7 +58,8 @@ int main(/*int argc, char* argv[]*/)
   {
     spdlog::info("This is ReceiverMain");
 
-    capnp::EzRpcServer server(kj::heap<MyInterfaceImpl>(), "*:3456");
+    // capnp::EzRpcServer server(kj::heap<MyInterfaceImpl>(), "*:3456");
+    capnp::EzRpcServer server(kj::heap<EchoerImpl>(), "*:3456");
     kj::NEVER_DONE.wait(server.getWaitScope());
   }
   catch (std::exception& e)
