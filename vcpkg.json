@@ -1,21 +1,12 @@
 {
   "name": "ipc-testing",
   "version": "0.0.1",
-  "builtin-baseline": "c8696863d371ab7f46e213d8f5ca923c4aef2a00",
+  "builtin-baseline": "b2f8426094693faaeb29ec92aaae2ca393f6f0c9",
   "dependencies": [
     "boost-json",
-    "boost-test",
-    "capnproto",
-    "cpr",
-    "magic-enum",
-    "openssl",
+    "gtest",
     "spdlog",
-    "stduuid"
-  ],
-  "overrides": [
-    {
-      "name": "curl",
-      "version": "7.80.0"
-    }
+    "stduuid",
+    "iceoryx"
   ]
 }

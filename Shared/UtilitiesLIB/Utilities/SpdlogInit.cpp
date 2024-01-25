@@ -3,7 +3,7 @@
 #include <iostream>
 #include <mutex>
 
-#include <cpr/cpr.h>
+// #include <cpr/cpr.h>
 #include <spdlog/async.h>
 #include <spdlog/sinks/base_sink.h>
 #include <spdlog/sinks/basic_file_sink.h>
@@ -16,15 +16,15 @@ namespace
   class discordImplSink : public spdlog::sinks::base_sink<Mutex>
   {
   public:
-    explicit discordImplSink(std::string const& channel, std::string const& botToken) : m_session()
+    explicit discordImplSink(std::string const& /*channel*/, std::string const& /*botToken*/)
     {
       // TODO: It would be nice at some point to set up a way to modify the logging channel
-      m_session.SetUrl(cpr::Url{"https://discord.com/api/v9/channels/" + channel + "/messages"});
-      m_session.SetHeader(cpr::Header{{"Authorization", "Bot " + botToken}});
+      // m_session.SetUrl(cpr::Url{"https://discord.com/api/v9/channels/" + channel + "/messages"});
+      // m_session.SetHeader(cpr::Header{{"Authorization", "Bot " + botToken}});
     }
 
   private:
-    cpr::Session m_session;
+    // cpr::Session m_session;
 
   protected:
     void sink_it_(const spdlog::details::log_msg& msg) override
@@ -32,14 +32,14 @@ namespace
       spdlog::memory_buf_t formatted;
       spdlog::sinks::base_sink<Mutex>::formatter_->format(msg, formatted);
 
-      m_session.SetPayload(cpr::Payload{{"content", fmt::to_string(formatted)}});
-      cpr::Response r = m_session.Post();
+      // m_session.SetPayload(cpr::Payload{{"content", fmt::to_string(formatted)}});
+      // cpr::Response r = m_session.Post();
 
-      if (!std::stoi(r.header["x-ratelimit-remaining"]))
-      {
-        auto resetAfter = std::stod(r.header["x-ratelimit-reset-after"]);
-        std::this_thread::sleep_for(std::chrono::milliseconds(int(resetAfter * 1000)));
-      }
+      // if (!std::stoi(r.header["x-ratelimit-remaining"]))
+      // {
+      //   auto resetAfter = std::stod(r.header["x-ratelimit-reset-after"]);
+      //   std::this_thread::sleep_for(std::chrono::milliseconds(int(resetAfter * 1000)));
+      // }
     }
 
     void flush_() override { std::cout << std::flush; }

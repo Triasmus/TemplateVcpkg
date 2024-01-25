@@ -1,11 +1,3 @@
-#include <iostream>
-
-#include <capnp/ez-rpc.h>
-#include <capnp/message.h>
-#include <kj/debug.h>
-
-#include "SdCapnProto/echo.capnp.h"
-#include "SdCapnProto/stream.capnp.h"
 #include "Utilities/SpdlogInit.hpp"
 #include "spdlog/stopwatch.h"
 
@@ -15,32 +7,6 @@ int main(/*int argc, char* argv[]*/)
   try
   {
     spdlog::info("This is SenderMain");
-
-    capnp::EzRpcClient client("localhost:3456");
-#ifdef false
-    MyInterface::Client inter = client.getMain<MyInterface>();
-    auto request = inter.streamingCallRequest();
-    uint64_t count, size;
-    std::cin >> count >> size;
-    request.setCount(count);
-    request.setSize(size);
-    auto response = request.send().wait(client.getWaitScope());
-    while (true)
-    {
-    }
-#endif
-    Echoer::Client echoer = client.getMain<Echoer>();
-    while (true)
-    {
-      auto request = echoer.echoRequest();
-      std::string toSend;
-      std::cin >> toSend;
-      spdlog::stopwatch sw;
-      request.setMessage(toSend);
-      auto response = request.send().wait(client.getWaitScope());
-      std::string res = response.getRes();
-      spdlog::info("echo: {}. Elapsed: {}", res, sw);
-    }
   }
   catch (std::exception& e)
   {
