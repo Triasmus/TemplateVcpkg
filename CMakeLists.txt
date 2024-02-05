@@ -27,9 +27,8 @@ enable_testing()
 include(GoogleTest)
 
 add_subdirectory(Playground)
-add_subdirectory(Receiver)
-add_subdirectory(Sender)
 add_subdirectory(Shared)
+add_subdirectory(SolutionName)
 
 if(UNIX)
   set(CPACK_GENERATOR RPM)

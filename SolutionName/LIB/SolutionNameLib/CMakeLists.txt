@@ -1,4 +1,4 @@
-set(lib_name ReceiverLib)
+set(lib_name ${solution_name}Lib)
 ###############################################
 set(${lib_name}_srcs
   Helper.cpp

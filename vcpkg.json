@@ -5,8 +5,8 @@
   "dependencies": [
     "boost-json",
     "gtest",
+    "quill",
     "spdlog",
-    "stduuid",
-    "iceoryx"
+    "stduuid"
   ]
 }

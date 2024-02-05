@@ -1,12 +1,11 @@
 #include "Utilities/SpdlogInit.hpp"
-#include "spdlog/stopwatch.h"
 
 int main(/*int argc, char* argv[]*/)
 {
   utils::logging::init_spdlog();
   try
   {
-    spdlog::info("This is SenderMain");
+    spdlog::info("This is SolutionNameMain");
   }
   catch (std::exception& e)
   {

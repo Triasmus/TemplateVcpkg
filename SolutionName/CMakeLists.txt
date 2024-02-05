@@ -1,4 +1,5 @@
-set(exe_name Sender)
+set(solution_name SolutionName)
+set(exe_name ${solution_name})
 set(folder ${exe_name})
 add_subdirectory(LIB/${exe_name}Lib)
 add_subdirectory(Test)
