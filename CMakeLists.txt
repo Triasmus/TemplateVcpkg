@@ -13,15 +13,16 @@ include(vcpkg/scripts/buildsystems/vcpkg.cmake)
 
 set(Boost_NO_WARN_NEW_VERSIONS true)
 
-find_package(GTest CONFIG REQUIRED) # Has GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main
+find_package(GTest CONFIG REQUIRED
+)# Has GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main
 find_package(spdlog CONFIG REQUIRED) # Has spdlog::spdlog spdlog::spdlog_header_only
 find_package(stduuid CONFIG REQUIRED) # Has stduuid
 
 find_package(Boost REQUIRED COMPONENTS json)
-if (Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIRS})
-    link_directories(${Boost_LIBRARY_DIRS})
-endif ()
+if(Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIRS})
+  link_directories(${Boost_LIBRARY_DIRS})
+endif()
 
 enable_testing()
 include(GoogleTest)

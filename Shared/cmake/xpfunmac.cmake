@@ -1,4 +1,4 @@
-########################################
+# ##############################################################################
 # xpfunmac.cmake
 #  xp prefix = intended to be used both internally (by externpro) and externally
 #  ip prefix = intended to be used only internally by externpro
@@ -79,7 +79,7 @@ function(xpGitIgnoredDirs var dir)
     ERROR_QUIET
     OUTPUT_VARIABLE ignoredDirs
     OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
+  )
   string(REPLACE ";" "\\\\;" ignoredDirs "${ignoredDirs}")
   string(REPLACE "\n" ";" ignoredDirs "${ignoredDirs}")
   list(APPEND ignoredDirs ${ARGN})
@@ -98,7 +98,7 @@ function(xpGitIgnoredFiles var dir)
     ERROR_QUIET
     OUTPUT_VARIABLE ignoredFiles
     OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
+  )
   string(REPLACE ";" "\\\\;" ignoredFiles "${ignoredFiles}")
   string(REPLACE "\n" ";" ignoredFiles "${ignoredFiles}")
   list(TRANSFORM ignoredFiles PREPEND ${dir}/)
@@ -116,7 +116,7 @@ function(xpGitUntrackedFiles var dir)
     ERROR_QUIET
     OUTPUT_VARIABLE untrackedFiles
     OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
+  )
   string(REPLACE ";" "\\\\;" untrackedFiles "${untrackedFiles}")
   string(REPLACE "\n" ";" untrackedFiles "${untrackedFiles}")
   list(TRANSFORM untrackedFiles PREPEND ${dir}/)
@@ -169,14 +169,16 @@ macro(xpSourceListAppend)
       list(APPEND masterSrcList ${f})
     endforeach()
   endif()
-  file(GLOB miscFiles LIST_DIRECTORIES false
+  file(
+    GLOB miscFiles
+    LIST_DIRECTORIES false
     ${_dir}/.git*
     ${_dir}/*clang-format
     ${_dir}/.crtoolrc
     ${_dir}/docker-compose.*
     ${_dir}/README.md
     ${_dir}/version.cmake
-    )
+  )
   if(miscFiles)
     list(APPEND masterSrcList ${miscFiles})
     file(RELATIVE_PATH relPath ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
@@ -221,13 +223,21 @@ macro(xpSourceListAppend)
         xpGlobFiles(repoFiles ${item} *)
       endforeach()
       set(fmtFiles ${repoFiles})
-      list(FILTER fmtFiles INCLUDE REGEX "^.*\\.(c|h|cpp|hpp|cu|cuh|proto)$")
+      list(
+        FILTER
+        fmtFiles
+        INCLUDE
+        REGEX
+        "^.*\\.(c|h|cpp|hpp|cu|cuh|proto)$"
+      )
       foreach(item ${XP_SOURCE_DIR_IGNORE})
         xpGlobFiles(ignoreFiles ${item} *)
       endforeach()
       list(REMOVE_ITEM repoFiles ${masterSrcList} ${ignoreFiles})
       if(DEFINED NV_CMAKE_REPO_INSYNC)
-        option(XP_CMAKE_REPO_INSYNC "cmake error if repo and cmake are not in sync" ${NV_CMAKE_REPO_INSYNC})
+        option(XP_CMAKE_REPO_INSYNC "cmake error if repo and cmake are not in sync"
+               ${NV_CMAKE_REPO_INSYNC}
+        )
       else()
         option(XP_CMAKE_REPO_INSYNC "cmake error if repo and cmake are not in sync" OFF)
       endif()
@@ -245,8 +255,8 @@ macro(xpSourceListAppend)
           endforeach()
           message("")
           message(FATAL_ERROR "repo and cmake are out of sync, see file(s) listed above. "
-            "See also \"${CMAKE_BINARY_DIR}/notincmake.txt\"."
-            )
+                              "See also \"${CMAKE_BINARY_DIR}/notincmake.txt\"."
+          )
         endif()
       elseif(EXISTS ${CMAKE_BINARY_DIR}/notincmake.txt)
         file(REMOVE ${CMAKE_BINARY_DIR}/notincmake.txt)
@@ -260,11 +270,11 @@ macro(xpSourceListAppend)
         # NOTE: externpro doesn't have usexp-clangformat-config.cmake at cmake time
         if(NOT CMAKE_PROJECT_NAME STREQUAL externpro)
           xpGetPkgVar(clangformat EXE)
-          add_custom_command(OUTPUT format_cmake
-            COMMAND ${CLANGFORMAT_EXE} -style=file -i ${fmtFiles}
+          add_custom_command(
+            OUTPUT format_cmake COMMAND ${CLANGFORMAT_EXE} -style=file -i ${fmtFiles}
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
             COMMENT "Running clang-format on ${lenFmtFiles} files..."
-            )
+          )
         endif()
         string(REPLACE ";" "\n" fmtFiles "${fmtFiles}")
         file(WRITE ${CMAKE_BINARY_DIR}/formatfiles.txt ${fmtFiles}\n)
@@ -286,27 +296,30 @@ macro(xpSourceListAppend)
         set(NV_GRAPHVIZ_PRIVATE_DEPS ${XP_GRAPHVIZ_PRIVATE_DEPS})
         unset(XP_GRAPHVIZ_PRIVATE_DEPS)
       endif()
-      cmake_dependent_option(XP_GRAPHVIZ_PRIVATE_DEPS
-        "keep private dependencies in graph" ${NV_GRAPHVIZ_PRIVATE_DEPS}
-        "XP_GRAPHVIZ" ON
-        )
+      cmake_dependent_option(
+        XP_GRAPHVIZ_PRIVATE_DEPS
+        "keep private dependencies in graph"
+        ${NV_GRAPHVIZ_PRIVATE_DEPS}
+        "XP_GRAPHVIZ"
+        ON
+      )
       mark_as_advanced(XP_GRAPHVIZ_PRIVATE_DEPS)
       if(XP_GRAPHVIZ)
         if(NOT XP_GRAPHVIZ_PRIVATE_DEPS)
-          configure_file(${xpThisDir}/graphPvtClean.sh.in graphPvtClean.sh
-            @ONLY NEWLINE_STYLE LF
-            )
+          configure_file(${xpThisDir}/graphPvtClean.sh.in graphPvtClean.sh @ONLY NEWLINE_STYLE LF)
           set(graphPvtClean COMMAND ./graphPvtClean.sh)
         endif()
         if(NOT TARGET graph)
-          add_custom_command(OUTPUT graph_cmake
-            COMMAND ${CMAKE_COMMAND} --graphviz=${CMAKE_PROJECT_NAME}.dot .
-            ${graphPvtClean}
+          add_custom_command(
+            OUTPUT graph_cmake
+            COMMAND ${CMAKE_COMMAND} --graphviz=${CMAKE_PROJECT_NAME}.dot . ${graphPvtClean}
             COMMAND dot -Tpng -o${CMAKE_PROJECT_NAME}.png ${CMAKE_PROJECT_NAME}.dot
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
             COMMENT "Generating ${CMAKE_PROJECT_NAME}.dot and ${CMAKE_PROJECT_NAME}.png..."
-            )
-          add_custom_target(graph SOURCES ${CMAKE_BINARY_DIR}/CMakeGraphVizOptions.cmake DEPENDS graph_cmake)
+          )
+          add_custom_target(
+            graph SOURCES ${CMAKE_BINARY_DIR}/CMakeGraphVizOptions.cmake DEPENDS graph_cmake
+          )
           set_property(TARGET graph PROPERTY FOLDER CMakeTargets)
         endif()
         set(opts "# Generating Dependency Graphs with CMake\n")
@@ -323,8 +336,20 @@ macro(xpSourceListAppend)
             set(opts "${opts})\n")
           endif()
         endforeach()
-        foreach(boolOpt EXECUTABLES STATIC_LIBS SHARED_LIBS MODULE_LIBS INTERFACE_LIBS OBJECT_LIBS UNKNOWN_LIBS
-                        EXTERNAL_LIBS CUSTOM_TARGETS GENERATE_PER_TARGET GENERATE_DEPENDERS)
+        foreach(
+          boolOpt
+          EXECUTABLES
+          STATIC_LIBS
+          SHARED_LIBS
+          MODULE_LIBS
+          INTERFACE_LIBS
+          OBJECT_LIBS
+          UNKNOWN_LIBS
+          EXTERNAL_LIBS
+          CUSTOM_TARGETS
+          GENERATE_PER_TARGET
+          GENERATE_DEPENDERS
+        )
           if(DEFINED GRAPHVIZ_${boolOpt})
             set(opts "${opts}set(GRAPHVIZ_${boolOpt} ${GRAPHVIZ_${boolOpt}})\n")
           endif()
@@ -340,8 +365,31 @@ macro(xpSourceListAppend)
       if(NOT ${len} EQUAL 0)
         file(REMOVE ${cscope_files})
       endif()
-      foreach(extn bmp docx gif ICO ico jpeg jpg ntf pdf png rtf vsd xcf xlsx zip)
-        list(FILTER masterSrcList EXCLUDE REGEX "(.*).${extn}$")
+      foreach(
+        extn
+        bmp
+        docx
+        gif
+        ICO
+        ico
+        jpeg
+        jpg
+        ntf
+        pdf
+        png
+        rtf
+        vsd
+        xcf
+        xlsx
+        zip
+      )
+        list(
+          FILTER
+          masterSrcList
+          EXCLUDE
+          REGEX
+          "(.*).${extn}$"
+        )
       endforeach()
       string(REPLACE ";" "\n" cscopeFileList "${masterSrcList}")
       file(WRITE ${CMAKE_BINARY_DIR}/cscope.files ${cscopeFileList}\n)
@@ -359,13 +407,25 @@ function(xpSourceDirIgnore)
 endfunction()
 
 function(xpFindPkg)
-  cmake_parse_arguments(FP "" "" PKGS ${ARGN})
+  cmake_parse_arguments(
+    FP
+    ""
+    ""
+    PKGS
+    ${ARGN}
+  )
   foreach(pkg ${FP_PKGS})
     string(TOUPPER ${pkg} PKG)
     if(NOT ${PKG}_FOUND)
       string(TOLOWER ${pkg} pkg)
       unset(usexp-${pkg}_DIR CACHE)
-      find_package(usexp-${pkg} REQUIRED PATHS ${XP_MODULE_PATH} NO_DEFAULT_PATH)
+      find_package(
+        usexp-${pkg}
+        REQUIRED
+        PATHS
+        ${XP_MODULE_PATH}
+        NO_DEFAULT_PATH
+      )
       mark_as_advanced(usexp-${pkg}_DIR)
       if(DEFINED ${PKG}_FOUND)
         list(APPEND reqVars ${PKG}_FOUND)
@@ -467,8 +527,10 @@ function(xpToggleDebugInfo)
     set(reldebCompiler "/Zi /O2 /Ob1")
     set(releaseLinker "/INCREMENTAL:NO")
     set(reldebLinker "/debug /INCREMENTAL")
-  elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR
-         ${CMAKE_C_COMPILER_ID} MATCHES "Clang" OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
+  elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_C_COMPILER_ID} MATCHES
+                                                                "Clang" OR ${CMAKE_CXX_COMPILER_ID}
+                                                                           MATCHES "Clang"
+  )
     set(releaseCompiler "-O3")
     set(reldebCompiler "-O2 -g")
   else()
@@ -502,19 +564,22 @@ function(xpToggleDebugInfo)
 endfunction()
 
 function(xpDebugInfoOption)
-  cmake_dependent_option(XP_BUILD_WITH_DEBUG_INFO "build Release with debug information" OFF
-    "DEFINED CMAKE_BUILD_TYPE;CMAKE_BUILD_TYPE STREQUAL Release" OFF
-    )
-  set(checkflags
-    CMAKE_C_FLAGS_RELEASE
-    CMAKE_CXX_FLAGS_RELEASE
-    )
+  cmake_dependent_option(
+    XP_BUILD_WITH_DEBUG_INFO
+    "build Release with debug information"
+    OFF
+    "DEFINED CMAKE_BUILD_TYPE;CMAKE_BUILD_TYPE STREQUAL Release"
+    OFF
+  )
+  set(checkflags CMAKE_C_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELEASE)
   if(MSVC)
-    list(APPEND checkflags
+    list(
+      APPEND
+      checkflags
       CMAKE_EXE_LINKER_FLAGS_RELEASE
       CMAKE_MODULE_LINKER_FLAGS_RELEASE
       CMAKE_SHARED_LINKER_FLAGS_RELEASE
-      )
+    )
   endif()
   xpToggleDebugInfo(${checkflags})
 endfunction()
@@ -537,7 +602,9 @@ macro(xpCommonFlags)
     # Turn on Multi-processor Compilation
     xpStringAppendIfDne(CMAKE_C_FLAGS "/MP")
     xpStringAppendIfDne(CMAKE_CXX_FLAGS "/MP")
-  elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
+  elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES
+                                                                "Clang"
+  )
     if(CMAKE_BUILD_TYPE STREQUAL Debug)
       add_definitions(-D_DEBUG)
     endif()
@@ -617,7 +684,7 @@ macro(xpSetFlagsMsvc)
     -D_WINSOCK_DEPRECATED_NO_WARNINGS
     -D_WIN32_WINNT=0x0601 #(Windows 7 target)
     -DWIN32_LEAN_AND_MEAN
-    )
+  )
   xpStringAppendIfDne(CMAKE_EXE_LINKER_FLAGS_DEBUG "/MANIFEST:NO")
   # Remove Linker > System > Stack Reserve Size setting
   string(REPLACE "/STACK:10000000" "" CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS})
@@ -646,8 +713,10 @@ macro(xpSetFlagsMsvc)
   xpStringAppendIfDne(CMAKE_CXX_FLAGS "/we4238") # don't take address of temporaries
   xpStringAppendIfDne(CMAKE_CXX_FLAGS "/we4239") # don't bind temporaries to non-const references
   # Disable the following warnings
-  xpStringAppendIfDne(CMAKE_CXX_FLAGS "/wd4503") # decorated name length exceeded, name was truncated
-  xpStringAppendIfDne(CMAKE_CXX_FLAGS "/wd4351") # new behavior: elements of array will be default initialized
+  xpStringAppendIfDne(CMAKE_CXX_FLAGS "/wd4503"
+  )# decorated name length exceeded, name was truncated
+  xpStringAppendIfDne(CMAKE_CXX_FLAGS "/wd4351"
+  )# new behavior: elements of array will be default initialized
 endmacro()
 
 macro(xpSetFlagsGccDebug)
@@ -662,7 +731,9 @@ macro(xpSetFlagsGccDebug)
       if(XP_SANITIZER STREQUAL "ASAN")
         message(AUTHOR_WARNING "XP_USE_ASAN deprecated, remove use.")
       else()
-        message(AUTHOR_WARNING "XP_USE_ASAN deprecated and ignored, using XP_SANITIZER=${XP_SANITIZER}.")
+        message(
+          AUTHOR_WARNING "XP_USE_ASAN deprecated and ignored, using XP_SANITIZER=${XP_SANITIZER}."
+        )
       endif()
     endif()
     set(NV_SANITIZER ${XP_SANITIZER})
@@ -673,6 +744,7 @@ macro(xpSetFlagsGccDebug)
     set(XP_SANITIZER ${NV_SANITIZER} CACHE STRING "${docSanitizer}" FORCE)
     set_property(CACHE XP_SANITIZER PROPERTY STRINGS NONE ASAN TSAN)
     if(XP_SANITIZER STREQUAL "NONE")
+
     elseif(XP_SANITIZER STREQUAL "ASAN")
       include(CMakePushCheckState)
       cmake_push_check_state(RESET)
@@ -704,9 +776,13 @@ macro(xpSetFlagsGccDebug)
     set(NV_COVERAGE ${XP_COVERAGE})
     unset(XP_COVERAGE)
   endif()
-  cmake_dependent_option(XP_COVERAGE "generate coverage information" ${NV_COVERAGE}
-    "CMAKE_BUILD_TYPE STREQUAL Debug" ${NV_COVERAGE}
-    )
+  cmake_dependent_option(
+    XP_COVERAGE
+    "generate coverage information"
+    ${NV_COVERAGE}
+    "CMAKE_BUILD_TYPE STREQUAL Debug"
+    ${NV_COVERAGE}
+  )
   if(XP_COVERAGE AND CMAKE_BUILD_TYPE STREQUAL Debug)
     find_program(XP_PATH_LCOV lcov)
     find_program(XP_PATH_GENHTML genhtml)
@@ -723,30 +799,36 @@ macro(xpSetFlagsGccDebug)
       list(APPEND XP_COVERAGE_RM '${CMAKE_BINARY_DIR}/*')
       list(REMOVE_DUPLICATES XP_COVERAGE_RM)
       if(NOT TARGET precoverage)
-        add_custom_target(precoverage
-          COMMAND ${XP_PATH_LCOV} --directory ${CMAKE_BINARY_DIR} --zerocounters
-          COMMAND ${XP_PATH_LCOV} --capture --initial --directory ${CMAKE_BINARY_DIR} --output-file ${PROJECT_NAME}-base.info
-          WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-          )
+        add_custom_target(
+          precoverage COMMAND ${XP_PATH_LCOV} --directory ${CMAKE_BINARY_DIR} --zerocounters
+          COMMAND ${XP_PATH_LCOV} --capture --initial --directory ${CMAKE_BINARY_DIR} --output-file
+                  ${PROJECT_NAME}-base.info WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        )
       endif()
       if(NOT TARGET postcoverage)
-        add_custom_target(postcoverage
-          COMMAND ${XP_PATH_LCOV} --directory ${CMAKE_BINARY_DIR} --capture --output-file ${PROJECT_NAME}-test.info
-          COMMAND ${XP_PATH_LCOV} -a ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-base.info
-            -a ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-test.info -o ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.info
-          COMMAND ${XP_PATH_LCOV} --remove ${PROJECT_NAME}.info ${XP_COVERAGE_RM} --output-file ${PROJECT_NAME}-cleaned.info
+        add_custom_target(
+          postcoverage
+          COMMAND ${XP_PATH_LCOV} --directory ${CMAKE_BINARY_DIR} --capture --output-file
+                  ${PROJECT_NAME}-test.info
+          COMMAND
+            ${XP_PATH_LCOV} -a ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-base.info -a
+            ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-test.info -o
+            ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.info
+          COMMAND ${XP_PATH_LCOV} --remove ${PROJECT_NAME}.info ${XP_COVERAGE_RM} --output-file
+                  ${PROJECT_NAME}-cleaned.info
           COMMAND ${XP_PATH_GENHTML} -o report ${PROJECT_NAME}-cleaned.info
           COMMAND ${CMAKE_COMMAND} -E remove ${PROJECT_NAME}*.info
           WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-          )
+        )
       endif()
       if(NOT TARGET coverage)
-        add_custom_target(coverage
+        add_custom_target(
+          coverage
           COMMAND make precoverage
           COMMAND make test
           COMMAND make postcoverage
           WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-          )
+        )
       endif()
       xpStringAppendIfDne(CMAKE_CXX_FLAGS_DEBUG "--coverage")
     else()
@@ -759,17 +841,21 @@ macro(xpSetFlagsGccDebug)
     endif()
   endif()
   check_cxx_compiler_flag("-O0" has_O0)
-  if(has_O0) # don't use debug optimizations (coverage requires this, make it the default for all debug builds)
+  if(has_O0)
+
+    # don't use debug optimizations (coverage requires this, make it the default for all debug builds)
     xpStringAppendIfDne(CMAKE_CXX_FLAGS_DEBUG "-O0")
   endif()
 endmacro()
 
 macro(xpSetFlagsGcc)
   if(NOT CMAKE_BUILD_TYPE) # if not specified, default to "Release"
-    set(CMAKE_BUILD_TYPE "Release" CACHE STRING
-      "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
-      FORCE
-      )
+    set(CMAKE_BUILD_TYPE
+        "Release"
+        CACHE STRING
+              "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+              FORCE
+    )
   endif()
   include(CheckCCompilerFlag)
   include(CheckCXXCompilerFlag)
