@@ -5,11 +5,11 @@ int main(/*int argc, char* argv[]*/)
   utils::logging::init_spdlog();
   try
   {
-    spdlog::info("This is SolutionNameMain");
+    SPDLOG_INFO("This is SolutionNameMain");
   }
   catch (std::exception& e)
   {
-    spdlog::error("Exception: {}", e.what());
+    SPDLOG_ERROR("Exception: {}", e.what());
     spdlog::shutdown();
     return EXIT_FAILURE;
   }

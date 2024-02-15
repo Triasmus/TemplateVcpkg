@@ -1,16 +1,16 @@
 #include "Utilities/SpdlogInit.hpp"
 
-int main()
+int main(/*int argc, char* argv[]*/)
 {
   utils::logging::init_spdlog();
   spdlog::set_level(spdlog::level::trace);
   try
   {
-    spdlog::info("Welcome to the Playground");
+    SPDLOG_INFO("Welcome to the Playground");
   }
   catch (std::exception& e)
   {
-    spdlog::error("Exception: {}", e.what());
+    SPDLOG_ERROR("Exception: {}", e.what());
   }
   spdlog::shutdown();
   return EXIT_SUCCESS;

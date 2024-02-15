@@ -3,8 +3,6 @@
 
 #include <boost/json.hpp>
 
-#include <spdlog/spdlog.h>
-
 namespace utils
 {
   template <class T>

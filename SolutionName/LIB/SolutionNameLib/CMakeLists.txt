@@ -1,13 +1,33 @@
 set(lib_name ${solution_name}Lib)
+set(test_exe ${lib_name}Test)
 ###############################################
 set(${lib_name}_srcs
   Helper.cpp
   Helper.hpp
   )
 source_group("" FILES ${${lib_name}_srcs})
+list(APPEND ${lib_name}_libsrcs ${${lib_name}_srcs})
 ###############################################
-add_library(${lib_name} ${${lib_name}_srcs})
-# target_link_libraries(${lib_name} PUBLIC )
+set(${test_exe}_srcs
+  Helper.test.cpp
+  )
+source_group("" FILES ${${test_exe}_srcs})
+list(APPEND ${test_exe}_testsrcs ${${test_exe}_srcs})
+###############################################
+add_library(${lib_name} STATIC ${${lib_name}_libsrcs})
+add_executable(${test_exe} ${${test_exe}_testsrcs})
+# Link Libraries for sources ##################
+target_link_libraries(${lib_name}
+  PUBLIC
+  PRIVATE
+  )
+# Link Libraries for tests ####################
+target_link_libraries(${test_exe}
+  PRIVATE ${lib_name} GTest::gtest_main
+  )
+###############################################
 target_include_directories(${lib_name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../)
-set_property(TARGET ${lib_name} PROPERTY FOLDER ${folder})
+set_property(TARGET ${lib_name} PROPERTY FOLDER ${lib_name})
+set_property(TARGET ${test_exe} PROPERTY FOLDER ${lib_name})
+gtest_discover_tests(${test_exe})
 xpSourceListAppend(${${lib_name}_srcs})

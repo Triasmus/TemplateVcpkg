@@ -1,8 +1,6 @@
 set(solution_name SolutionName)
 set(exe_name ${solution_name})
-set(folder ${exe_name})
-add_subdirectory(LIB/${exe_name}Lib)
-add_subdirectory(Test)
+add_subdirectory(LIB/${solution_name}Lib)
 ###############################################
 set(${exe_name}_srcs
   ${exe_name}Main.cpp
