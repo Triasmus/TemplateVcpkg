@@ -145,7 +145,7 @@ SpacesInContainerLiterals: true
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
-Standard: c++14
+Standard: c++20
 StatementMacros:
 TabWidth: 8
 UseCRLF: false
