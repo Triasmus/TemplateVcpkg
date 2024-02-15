@@ -1,4 +1,7 @@
 .env
 _bld*/
 _build*/
+build*/
 .vscode
+CMakeCache.txt
+CMakeFiles/
